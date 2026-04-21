@@ -66,8 +66,8 @@ def difussionOuterBay(slope,xLengthArray,D1,D2):
 
 D =difussionOuterBay(-1,sal_array,34,10)
 f = D.reshape(sal_array.shape)
-#plt.imshow(f)
-#plt.colorbar()
+plt.imshow(f)
+plt.colorbar()
 
 
 D_at_link = Island.map_mean_of_link_nodes_to_link(D)
@@ -86,7 +86,7 @@ print(f"Stable dt is: {dt_stable}")
 
 
 
-for i in range(1000000):
+for i in range(100000):
     g = Island.calc_grad_at_link(salinity)
     #D1 = Island.calc_grad_at_link(D)
     qs[Island.active_links] = -D_at_link[Island.active_links] * g[Island.active_links]
@@ -96,7 +96,7 @@ for i in range(1000000):
 
 salinityBinary = salinity
 salinityBinary[salinityBinary>100]=0
-salinityBinary[salinityBinary<40]=0
+salinityBinary[salinityBinary<41]=0
 #salinityBinary[salinityBinary==85.000011]=0
 
 
