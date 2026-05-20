@@ -105,3 +105,62 @@ t = salinityBinary.reshape(sal_array.shape) ###change this to size of salinity
 count = np.count_nonzero(t)
 Island.imshow(t)
 
+
+with rio.open('/Users/isamarcortes/Downloads/PR_NDVI_Islands/PR3_NDVI.tif') as src:
+    # Read first band
+    NDVI = src.read(1)
+
+    print(NDVI.shape)
+    print(src.crs)
+    print(src.transform)
+
+
+
+
+
+
+from scipy.ndimage import zoom
+zoom_factors = (
+    NDVI.shape[0] / t.shape[0],
+    NDVI.shape[1] / t.shape[1]
+)
+
+b_resized = zoom(t, zoom_factors)
+
+
+mask = (
+    np.isfinite(NDVI) &
+    np.isfinite(b_resized) &
+    (NDVI > 0) &
+    (NDVI <= 1) &
+    (b_resized > 0)
+)
+
+x = NDVI[mask]
+y = b_resized[mask]
+
+plt.scatter(x,y)
+plt.xlabel('NDVI')
+plt.ylabel('Modeled Salinity')
+
+
+
+
+
+
+import seaborn as sns
+
+sns.regplot(
+    x=y,
+    y=x,
+    lowess=True,
+    scatter_kws={'s':2, 'alpha':0.03},
+    line_kws={'color':'red', 'lw':3}
+)
+
+
+plt.xlim(70,110)
+plt.ylim(0.7,0.85)
+
+
+
